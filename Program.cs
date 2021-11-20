@@ -20,7 +20,7 @@ namespace com.truplay.Games.TicTacToe {
             s_computer = new TicTacToePlayer("computer", true);
             Console.WriteLine("Computer player: " + s_computer.getName());
 
-            //create the user's player
+            //ask the player for their name and create their player object
             Console.Write("What is your name? ");
             string? playerName = Console.ReadLine();
             while (playerName == null) {
@@ -32,42 +32,62 @@ namespace com.truplay.Games.TicTacToe {
             }
             Console.WriteLine("\nHello " + s_user.getName() + "!\n");
 
+            //play the game! Keep looping until the game is over.
             Boolean keepPlaying = true;
             int selection;
 
             while (keepPlaying) {
-                //show the current board
+
+                //Step 1: show the current board
                 ShowBoard();
 
-                //get input and validate that it is both an integer and an empty spot on the board
+                //Step 2: get and play the Player's move 
                 selection = GetInput();
                 s_user.AddMove(selection);
 
-                //check for end of game scenario
+                //Step 3: check for end of game scenario
                 Console.WriteLine("checking for a win condition...");
                 keepPlaying = CheckKeepPlaying(s_user);
 
                 if (keepPlaying) {
                     Console.WriteLine("no win scenario yet... keep playing");
+
+                    //Step 4: play the computer opponent's move
                     selection = GetComputerTurn();
                     Console.WriteLine("Computer chose: " + selection);
                     s_computer.AddMove(selection);
 
+                    //Step 5: check for end of game scenario (again)
                     Console.WriteLine("no win scenario after computer's turn...keep playing");
                     keepPlaying = CheckKeepPlaying(s_computer);
                 }
             }
 
-            //display the final board and exit
+            //display the final board
             ShowBoard();
 
+            //exit
+            Console.WriteLine("\n Thank you for playing!");
         }
 
+        /*
+            Name: DisplayInstructions()
+            Params: none
+            Return: void
+            Description: Prints the game rules to the user.
+        */
         static void DisplayInstructions() {
             Console.WriteLine("Welcome to Tic-Tac-Toe!");
             Console.WriteLine("\nGet 3 in a row (vertical, horizontal or diagonal) and you win!\n");
+            Console.WriteLine("You will be playing against a computer opponent. You will be prompted for a number that correcsponds to a location on the gameboard.");
         }
 
+        /*
+            Name: GetInput()
+            Params: none
+            Return: int -- the location on the board that the player selected
+            Description: Polls the user for a valid free space on the game board and loops until one is provided.
+        */
         static int GetInput() {
             bool validInput = false;
             int selection = 0;
@@ -94,6 +114,13 @@ namespace com.truplay.Games.TicTacToe {
 
         }
 
+        /*
+            Name: CreateWinConditions()
+            Params: none
+            Return: ArrayList of all possible winning combinations
+            Description: Constructs a list of sets, where each set is a winning combination on the game board.
+            Since this is tic-tac-toe, winning conditions are three in a row, horizontally, vertically or diagonally.
+        */
         static ArrayList CreateWinConditions() {
             ArrayList winConditions = new ArrayList();
 
@@ -118,16 +145,25 @@ namespace com.truplay.Games.TicTacToe {
             winConditions.Add(win_7);
             winConditions.Add(win_8);
             
-            /*
-            */
             return winConditions;
         }
+
+        /*
+            Name: CheckKeepPlaying()
+            Params: none
+            Return: bool -- TRUE|FALSE whether or not the game should continue
+            Description: Evaluates certain game conditions and determines if play should continue.
+            conditions:
+             - No more free spaces
+             - a player has a winning combination
+        */
         static bool CheckKeepPlaying(TicTacToePlayer player) {
             //check for 3 in a row, horizontal, vertical or diagonal
             ArrayList winConditions = CreateWinConditions();
             bool isSuperset;
 
             foreach (HashSet<int> win_condition in winConditions ) {
+                //we only need to see if the player's set of moves has a winning combination in it
                 isSuperset = new HashSet<int>(player.GetMoves()).IsSupersetOf(win_condition);
                 if (isSuperset) {
                     Console.WriteLine("\n");
@@ -141,13 +177,24 @@ namespace com.truplay.Games.TicTacToe {
             }
             //if there is no winning condition AND there are no more moves left on the board, declare a tie
             if (s_freeSpaces.Count() == 0) {
+                Console.WriteLine("\n");
+                Console.WriteLine("-------------------------------------------");
+                Console.WriteLine("-------------------------------------------");
                 Console.WriteLine("It's a Tie!");
+                Console.WriteLine("-------------------------------------------");
+                Console.WriteLine("-------------------------------------------");
                 return false;
             }
 
             return true;
         }
 
+        /*
+            Name: GetComputerTurn()
+            Params: none
+            Return: int -- the location on the board that the computer selected.
+            Description: Returns a random free space entry from the list of available spaces.
+        */
         static int GetComputerTurn() {
             //get a random free space... it would be better to exand this into an actual strategy by trying to find 
             //two side-by-side moves already taken by the user and trying to block it.
@@ -163,7 +210,7 @@ namespace com.truplay.Games.TicTacToe {
         }
 
         /*
-            Name: populateValues()
+            Name: PopulateValues()
             Params: none
             Return: string[]
             Description: This method populates the game board with the values by examining the moves already 
@@ -172,7 +219,7 @@ namespace com.truplay.Games.TicTacToe {
             - user: an 'X'
             - computere: an 'O'
         */
-        private static string[] populateValues() {
+        private static string[] PopulateValues() {
             string[] vals = new string[9];
             for (int i=1; i<=9; i++) {
                 if (s_user.HasMove(i)) {
@@ -187,8 +234,7 @@ namespace com.truplay.Games.TicTacToe {
         }
 
         /*
-        /*
-            Name: showBoard()
+            Name: ShowBoard()
             Params: none
             Return: void
             Description: Print the 3x3 game board, showing all slots. For simplicity, users are always 'X's 
@@ -197,7 +243,7 @@ namespace com.truplay.Games.TicTacToe {
         private static void ShowBoard() {
             string space = "|     |     |     |";
             string line =  "-------------------";
-            string[] values = populateValues();
+            string[] values = PopulateValues();
 
 
             Console.WriteLine(line);

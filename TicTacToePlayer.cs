@@ -21,6 +21,7 @@ namespace com.truplay.Player {
             return moves.Contains(move);
         }
 
+        //getters
         public HashSet<int> GetMoves() {
             return moves;
         }

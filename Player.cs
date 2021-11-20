@@ -2,13 +2,13 @@ namespace com.truplay.Player {
     
     /*
     This is the base player class for all games. As such, it should only contain information about the player itself
-    and additional fields/methods for for specific games should utilize inheritence. 
+    and additional fields/methods for specific games should utilize inheritence. 
     */
     public class Player {
         private string Name;
-        private bool IsAI;
+        private bool IsAI;  //Is the player a computer?
 
-        //add additional fields here... age, gender(?), last login date/time, etc. 
+        //TODO: add additional fields here... age, gender(?), last login date/time, etc. 
 
         public Player() {
             Name = "";
