@@ -3,7 +3,7 @@ namespace com.truplay.Player {
     /*
     This is the Tic-Tac-Toe player class. It contains fields/methods specific to the game.
     */
-    public class TicTacToePlayer : Player {
+    public class TicTacToePlayer : BasePlayer {
 
         //We don't really need to keep track of the order of the moves for this game, so just store them in a Set.
         private HashSet<int> moves; //A set to keep track of the moves on the tic-tac-toe board. 
